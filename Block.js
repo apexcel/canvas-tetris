@@ -4,18 +4,20 @@ export class Block {
     constructor(ctx) {
         this.ctx = ctx;
         this.ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
-        this.x = 0;
+        this.x = Math.floor(ctx.canvas.width / BLOCK_SIZE / 2);
         this.y = 0;
         this.createBlock();
     }
 
     createBlock = () => {
-        const rand = Math.floor(Math.random() * 7) + 1;
+        const rand = Math.floor(Math.random() * (SHAPES.length - 1)) + 1;
+        this.ctx.fillStyle = `rgb(${this.randColor()}, ${this.randColor()}, ${this.randColor()})`;
         this.shape = SHAPES[rand];
     }
 
+    randColor = () => Math.floor(Math.random() * 255) + 1;
+
     draw = () => {
-        // this.ctx.fillStyle = this.color;
         this.shape.forEach((row, y) => {
             row.forEach((value, x) => {
                 if (value > 0) {

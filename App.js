@@ -6,6 +6,7 @@ class App {
         this.board = new GameBoard(main);
         this.board.reset()
     }
+
 }
 
 export default App;

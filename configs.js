@@ -53,8 +53,11 @@ const KEY = {
     P: 80
 };
 
+const pipe = (...args) => value => args.reduce((result, fn) => fn(result), value);
+
 [SHAPES, KEY].forEach(v => Object.freeze(v));
 
 export {
-    BLOCK_SIZE, ROW, COL, SHAPES, KEY
+    BLOCK_SIZE, ROW, COL, SHAPES, KEY,
+    pipe
 };
