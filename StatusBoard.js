@@ -13,8 +13,8 @@ class StatusBoard {
         this.statusBoard.innerHTML = `
             <div>
                 <span id='score'>Score: 0</span>
-                <span>Highest Score: 0</span>
-                <span>Level: 0</span>
+                <span id='high-score'>Highscore: 0</span>
+                <span id='game-level'>Level: 0</span>
             </div>
         `;
     };

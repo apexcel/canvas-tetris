@@ -6,7 +6,8 @@ class GameBoard {
     transform = {
         [KEY.LEFT]: b => ({ ...b, x: b.x - 1 }),
         [KEY.RIGHT]: b => ({ ...b, x: b.x + 1 }),
-        [KEY.UP]: b => (this.moveBlock(this.rotate(b))),
+        // [KEY.UP]: b => (this.moveBlock(this.rotate(b))),
+        [KEY.UP]: b => b,
         [KEY.DOWN]: b => ({ ...b, y: b.y + 1 }),
         [KEY.SPACE]: b => ({ ...b, y: b.y + 1 }),
     };
@@ -84,8 +85,14 @@ class GameBoard {
         this.grid.forEach((row, y) => {
             row.forEach((value, x) => {
                 if (value > 0) {
-                    this.ctx.fillStyle = COLORS[value];
+                    this.ctx.beginPath()
+                    this.ctx.fillStyle = COLORS[value] + 'ca';
                     this.ctx.fillRect(x, y, 1, 1);
+                    this.ctx.fillStyle = COLORS[value];
+                    this.ctx.fillRect(x + 0.08, y + 0.08, .9, .9);
+                    this.ctx.closePath()
+                    // this.ctx.fillStyle = COLORS[value];
+                    // this.ctx.fillRect(x, y, 1, 1);
                 }
             });
         });
@@ -98,9 +105,12 @@ class GameBoard {
         if (getInput) {
             e.preventDefault();
             let nextStatus = getInput(this.block);
-            if (k === KEY.RIGHT || k === KEY.LEFT || k === KEY.DOWN) {
+            if (k === KEY.RIGHT || k === KEY.LEFT || k === KEY.DOWN || k === KEY.UP) {
                 if (this.isValidMovement(nextStatus)) {
                     this.moveBlock(nextStatus);
+                }
+                if (k === KEY.UP) {
+                    this.moveBlock(this.rotate(this.block));
                 }
                 if (k === KEY.DOWN) {
                     this.account.score += POINTS.SOFT_DROP;
@@ -190,6 +200,7 @@ class GameBoard {
 
         if (lines > 0) {
             this.account.score += this.addLineClearPoints(lines);
+            this.account.lines += lines;
         }
     }
 
