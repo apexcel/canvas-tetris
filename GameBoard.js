@@ -1,5 +1,6 @@
-import { ROW, COL, BLOCK_SIZE, KEY } from './configs.js'
+import { ROW, COL, BLOCK_SIZE, KEY, POINTS, COLORS, getCenterPos } from './configs.js'
 import Block from './Block.js';
+
 class GameBoard {
     grid;
     transform = {
@@ -10,30 +11,38 @@ class GameBoard {
         [KEY.SPACE]: b => ({ ...b, y: b.y + 1 }),
     };
 
-    constructor(main) {
+    constructor(main, account) {
         const canvas = document.createElement('canvas');
         this.ctx = canvas.getContext('2d');
-        this.ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
+        this.account = account;
         this.init(canvas);
 
         globalThis.addEventListener('keydown', this.onKeyDownHandler)
         main.appendChild(canvas);
     }
 
-    init = board => {
-        board.id = 'game-board';
-        board.width = COL * BLOCK_SIZE;
-        board.height = ROW * BLOCK_SIZE;
-        board.style.border = '1px solid black';
-
+    play = () => {
         this.time = {
             start: 0,
             elapsed: 0,
             level: 1000
         };
-        this.block = new Block(this.ctx);
-        this.block.draw();
-        this.animate()
+        this.block = new Block(this.ctx)
+        this.animate();
+    };
+
+    init = board => {
+        board.id = 'game-board';
+        board.width = COL * BLOCK_SIZE;
+        board.height = ROW * BLOCK_SIZE;
+        board.style.border = '1px solid black';
+        this.ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
+        this.reset();
+    }
+
+    reset = () => {
+        this.account.score = 0;
+        this.resetGrid();
     }
 
     animate = (now = 0) => {
@@ -41,21 +50,51 @@ class GameBoard {
         if (this.time.elapsed > this.time.level) {
             this.time.start = now;
             this.dropBlock(this.block);
+            if (this.block.y === 0) {
+                this.gameOver()
+                return;
+            }
         }
+        if (this.isFreeze) {
+            this.block = new Block(this.ctx)
+            this.isFreeze = false;
+        }
+
         this.clearCanvas(this.ctx);
         this.block.draw();
-        this.requestId = requestAnimationFrame(this.animate.bind(this))
+        this.drawGrid();
+        this.requestId = requestAnimationFrame(this.animate)
     }
 
-    reset = () => {
-        this.grid = this.setEmptyGrid();
+    gameOver = () => {
+        const [cx, cy] = getCenterPos();
+        cancelAnimationFrame(this.requestId);
+        this.ctx.font = '1px Arial'
+        this.ctx.fillStyle = '#333333'
+        this.ctx.fillRect(0, cy, COL, 3)
+        this.ctx.fillStyle = '#FFFFFF'
+        this.ctx.fillText('GAME OVER', Math.floor(COL / 4), cy + 1);
     }
 
-    setEmptyGrid = () => Array.from(Array(ROW), () => Array(COL).fill(0));
+    resetGrid = () => {
+        this.grid = Array.from(Array(ROW), () => Array(COL).fill(0));
+    }
+
+    drawGrid = () => {
+        this.grid.forEach((row, y) => {
+            row.forEach((value, x) => {
+                if (value > 0) {
+                    this.ctx.fillStyle = COLORS[value];
+                    this.ctx.fillRect(x, y, 1, 1);
+                }
+            });
+        });
+    };
 
     onKeyDownHandler = e => {
         const k = e.keyCode;
         const getInput = this.transform[k];
+
         if (getInput) {
             e.preventDefault();
             let nextStatus = getInput(this.block);
@@ -63,24 +102,32 @@ class GameBoard {
                 if (this.isValidMovement(nextStatus)) {
                     this.moveBlock(nextStatus);
                 }
+                if (k === KEY.DOWN) {
+                    this.account.score += POINTS.SOFT_DROP;
+                }
             }
             else if (k === KEY.SPACE) {
                 while (this.isValidMovement(nextStatus)) {
                     this.moveBlock(nextStatus);
-                    nextStatus = this.transform[KEY.DOWN](this.block)
+                    nextStatus = this.transform[KEY.DOWN](this.block);
+                    this.account.score += POINTS.HARD_DROP;
                 }
             }
         }
-        else {
-            return;
-        }
+        return;
     }
 
     dropBlock = currentBlock => {
-        const nextStatus = ({...currentBlock, y: currentBlock.y + 1});
+        const nextStatus = ({ ...currentBlock, y: currentBlock.y + 1 });
         if (this.isValidMovement(nextStatus)) {
             this.block.move(nextStatus);
         }
+        else {
+            this.freeze();
+            this.isFreeze = true;
+            this.clearLines();
+        }
+        return;
     }
 
     moveBlock = next => {
@@ -117,7 +164,6 @@ class GameBoard {
         clone.shape.forEach(row => row.reverse());
 
         return this.isValidMovement(clone) ? clone : block;
-        // return clone;
     }
 
     clearCanvas = ctx => ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -130,6 +176,29 @@ class GameBoard {
                 }
             })
         })
+    }
+
+    clearLines = () => {
+        let lines = 0;
+        this.grid.forEach((row, y) => {
+            if (row.every(value => value > 0)) {
+                lines += 1;
+                this.grid.splice(y, 1);
+                this.grid.unshift(Array(COL).fill(0));
+            }
+        });
+
+        if (lines > 0) {
+            this.account.score += this.addLineClearPoints(lines);
+        }
+    }
+
+    addLineClearPoints = lines => {
+        return lines === 1 ? POINTS.SINGLE :
+        lines === 2 ? POINTS.DOUBLE :
+        lines === 3 ? POINTS.TRIPLE :
+        lines === 4 ? POINTS.TETRIS :
+        0;
     }
 }
 

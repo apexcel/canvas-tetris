@@ -1,8 +1,8 @@
 'use strict';
 
 const BLOCK_SIZE = 30;
-const ROW = 30;
-const COL = 15;
+const ROW = 15;
+const COL = 12;
 
 const SHAPES = [
     [],
@@ -53,11 +53,30 @@ const KEY = {
     P: 80
 };
 
-const pipe = (...args) => value => args.reduce((result, fn) => fn(result), value);
+const COLORS = [
+    `black`, `#37474f`, `#303f9f`, `#c2185b`, `#0288d1`, `#00796b`, `#ffa000`, `#5d4037`
+];
 
-[SHAPES, KEY].forEach(v => Object.freeze(v));
+const POINTS = {
+    SINGLE: 100,
+    DOUBLE: 300,
+    TRIPLE: 500,
+    TETRIS: 1200,
+    SOFT_DROP: 1,
+    HARD_DROP: 2,
+};
+
+const pipe = (...args) => value => args.reduce((result, fn) => fn(result), value);
+const getRandomInt = value => Math.floor(Math.random() * value) + 1;
+const getCenterPos = () => {
+    const y = Math.floor(ROW / 2);
+    const x = Math.floor(COL / 2);
+    return [x, y];
+};
+
+[SHAPES, KEY, COLORS, POINTS].forEach(v => Object.freeze(v));
 
 export {
-    BLOCK_SIZE, ROW, COL, SHAPES, KEY,
-    pipe
+    BLOCK_SIZE, ROW, COL, SHAPES, KEY, COLORS, POINTS,
+    pipe, getRandomInt, getCenterPos
 };
