@@ -1,15 +1,18 @@
-import { ROW, COL, BLOCK_SIZE, KEY, POINTS, COLORS, getCenterPos } from './configs.js'
+import { ROW, COL, BLOCK_SIZE, KEY, POINTS, COLORS, LEVEL, LINE_FOR_NEXT_LEVEL, getCenterPos } from './configs.js'
 import Block from './Block.js';
 
+const prevHighScore = globalThis.localStorage.getItem('high-score');
+const saveHighScore = value => globalThis.localStorage.setItem('high-score', value);
+const audio = document.getElementById('bgm');
 class GameBoard {
     grid;
     transform = {
         [KEY.LEFT]: b => ({ ...b, x: b.x - 1 }),
         [KEY.RIGHT]: b => ({ ...b, x: b.x + 1 }),
-        // [KEY.UP]: b => (this.moveBlock(this.rotate(b))),
         [KEY.UP]: b => b,
         [KEY.DOWN]: b => ({ ...b, y: b.y + 1 }),
         [KEY.SPACE]: b => ({ ...b, y: b.y + 1 }),
+        [KEY.ESC]: () => this.gameOver(),
     };
 
     constructor(main, account) {
@@ -18,18 +21,20 @@ class GameBoard {
         this.account = account;
         this.init(canvas);
 
-        globalThis.addEventListener('keydown', this.onKeyDownHandler)
         main.appendChild(canvas);
     }
 
     play = () => {
+        this.reset();
         this.time = {
             start: 0,
             elapsed: 0,
-            level: 1000
+            level: 1000,
+            gameLevel: 0
         };
         this.block = new Block(this.ctx)
         this.animate();
+        audio.play();
     };
 
     init = board => {
@@ -42,7 +47,10 @@ class GameBoard {
     }
 
     reset = () => {
+        globalThis.addEventListener('keydown', this.onKeyDownHandler)
         this.account.score = 0;
+        this.account.lines = 0;
+        this.account.high = prevHighScore ? prevHighScore : 0;
         this.resetGrid();
     }
 
@@ -61,6 +69,10 @@ class GameBoard {
             this.isFreeze = false;
         }
 
+        if (this.account.score > prevHighScore) {
+            this.account.high = this.account.score;
+        }
+
         this.clearCanvas(this.ctx);
         this.block.draw();
         this.drawGrid();
@@ -68,13 +80,25 @@ class GameBoard {
     }
 
     gameOver = () => {
-        const [cx, cy] = getCenterPos();
         cancelAnimationFrame(this.requestId);
+        globalThis.removeEventListener('keydown', this.onKeyDownHandler)
+        audio.load();
+        const [cx, cy] = getCenterPos();
         this.ctx.font = '1px Arial'
         this.ctx.fillStyle = '#333333'
         this.ctx.fillRect(0, cy, COL, 3)
         this.ctx.fillStyle = '#FFFFFF'
-        this.ctx.fillText('GAME OVER', Math.floor(COL / 4), cy + 1);
+        this.ctx.fillText('GAME OVER', Math.floor(COL / 3), cy + 1);
+        this.saveScore();
+    }
+
+    saveScore = () => {
+        if (prevHighScore) {
+            prevHighScore < this.account.score ? saveHighScore(this.account.score) : prevHighScore;
+        }
+        else {
+            saveHighScore(this.account.score);
+        }
     }
 
     resetGrid = () => {
@@ -91,8 +115,6 @@ class GameBoard {
                     this.ctx.fillStyle = COLORS[value];
                     this.ctx.fillRect(x + 0.08, y + 0.08, .9, .9);
                     this.ctx.closePath()
-                    // this.ctx.fillStyle = COLORS[value];
-                    // this.ctx.fillRect(x, y, 1, 1);
                 }
             });
         });
@@ -164,7 +186,7 @@ class GameBoard {
         return this.grid[y] && this.grid[y][x] === 0;
     }
 
-    rotate = (block, direction) => {
+    rotate = (block) => {
         let clone = JSON.parse(JSON.stringify(block));
         for (let y = 0; y < clone.shape.length; y += 1) {
             for (let x = 0; x < y; x += 1) {
@@ -199,17 +221,28 @@ class GameBoard {
         });
 
         if (lines > 0) {
-            this.account.score += this.addLineClearPoints(lines);
+            this.account.score += (this.time.gameLevel + 1) * this.addLineClearPoints(lines);
             this.account.lines += lines;
+            this.computeGameLevel();
         }
     }
 
     addLineClearPoints = lines => {
         return lines === 1 ? POINTS.SINGLE :
-        lines === 2 ? POINTS.DOUBLE :
-        lines === 3 ? POINTS.TRIPLE :
-        lines === 4 ? POINTS.TETRIS :
-        0;
+            lines === 2 ? POINTS.DOUBLE :
+                lines === 3 ? POINTS.TRIPLE :
+                    lines === 4 ? POINTS.TETRIS :
+                        0;
+    }
+
+    computeGameLevel = () => {
+        if (this.account.lines > LINE_FOR_NEXT_LEVEL) {
+            this.time.gameLevel += 1;
+            if (this.time.gameLevel < LEVEL.length) {
+                this.time.level = LEVEL[this.time.gameLevel];
+            }
+            console.log(this.time.gameLevel)
+        }
     }
 }
 

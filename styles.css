@@ -1,0 +1,123 @@
+@font-face {
+  font-family: "Gameplay";
+  src: url("./Gameplay.ttf") format("truetype");
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #3b3b3b;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#app {
+  display: flex;
+  padding: 20px;
+  background-color: #c5c5c5;
+  border: 1px solid black;
+  box-shadow: 0px 0px 4px 2px #6d6d6d;
+}
+
+#game-board {
+  background-color: #131313;
+}
+
+#status-board {
+  height: 600;
+  display: flex;
+  flex-direction: column;
+  margin-left: 50px;
+}
+
+#play-btn {
+  cursor: pointer;
+  text-align: center;
+  background-color: black;
+  border: 1px solid #333333;
+  height: 75px;
+}
+
+#play-btn h1 {
+  transform: translateY(50%);
+  color: white;
+}
+
+.status {
+  font-family: "Gameplay";
+  flex: none;
+  padding: 0 0 10px 0;
+  margin: 0 0 10px 0;
+}
+
+.status span {
+  font-size: 1.2rem;
+}
+
+.status.play {
+  position: relative;
+  margin-top: auto;
+  margin-bottom: 0;
+  padding: 0;
+}
+
+#play {
+    text-decoration: none;
+    text-transform: uppercase;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    color: #fff;
+    letter-spacing: 5px;
+}
+#play:before, #play:after {
+    display: block;
+    content: 'play';
+    text-transform: uppercase;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0.8;
+}
+#play:after {
+    color: rgb(255, 0, 255);
+    z-index: -2;
+}
+#play:before {
+    color: rgb(0, 255, 136);
+    z-index: -1;
+}
+#play:hover:before {
+    animation: glitch 0.3s cubic-bezier(0.25, 0.26, 0.25, 0.44) both 5;
+}
+#play:hover:after {
+    animation: glitch 0.3s cubic-bezier(0.25, 0.26, 0.25, 0.44) reverse both 5;
+}
+
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-3px, 3px);
+  }
+  40% {
+    transform: translate(-3px, -3px);
+  }
+  60% {
+    transform: translate(3px, 3px);
+  }
+  80% {
+    transform: translate(3px, -3px);
+  }
+  to {
+    transform: translate(0);
+  }
+}

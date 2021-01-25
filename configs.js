@@ -1,8 +1,8 @@
 'use strict';
 
 const BLOCK_SIZE = 30;
-const ROW = 15;
-const COL = 12;
+const ROW = 20;
+const COL = 11;
 
 const SHAPES = [
     [],
@@ -54,7 +54,14 @@ const KEY = {
 };
 
 const COLORS = [
-    `black`, `#37474f`, `#303f9f`, `#c2185b`, `#0288d1`, `#00796b`, `#ffa000`, `#5d4037`
+    `black`, 
+    `#546e7a`, 
+    `#ba68c8`, 
+    `#9c786c`, 
+    `#1565c0`, 
+    `#00796b`, 
+    `#ef9a9a`, 
+    `#fb8c00`
 ];
 
 const POINTS = {
@@ -66,6 +73,21 @@ const POINTS = {
     HARD_DROP: 2,
 };
 
+const LEVEL = [
+    950,
+    800,
+    750,
+    700,
+    650,
+    600,
+    500,
+    400,
+    300,
+    200
+];
+
+const LINE_FOR_NEXT_LEVEL = 5;
+
 const pipe = (...args) => value => args.reduce((result, fn) => fn(result), value);
 const getRandomInt = value => Math.floor(Math.random() * value) + 1;
 const getCenterPos = () => {
@@ -74,9 +96,9 @@ const getCenterPos = () => {
     return [x, y];
 };
 
-[SHAPES, KEY, COLORS, POINTS].forEach(v => Object.freeze(v));
+[SHAPES, KEY, COLORS, POINTS, LEVEL].forEach(v => Object.freeze(v));
 
 export {
-    BLOCK_SIZE, ROW, COL, SHAPES, KEY, COLORS, POINTS,
+    BLOCK_SIZE, ROW, COL, SHAPES, KEY, COLORS, POINTS, LINE_FOR_NEXT_LEVEL, LEVEL,
     pipe, getRandomInt, getCenterPos
 };

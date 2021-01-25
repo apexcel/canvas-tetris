@@ -16,7 +16,6 @@ export class Block {
     }
 
     draw = () => {
-        // this.ctx.fillStyle = this.color;
         this.shape.forEach((row, y) => {
             row.forEach((value, x) => {
                 if (value > 0) {
@@ -25,7 +24,7 @@ export class Block {
                     this.ctx.fillRect(this.x + x, this.y + y, 1, 1);
                     this.ctx.fillStyle = this.color;
                     this.ctx.fillRect(this.x + x + 0.08, this.y + y + 0.08, .9, .9);
-                    this.ctx.closePath()
+                    this.ctx.closePath();
                 }
             })
         })

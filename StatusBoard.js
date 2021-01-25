@@ -10,11 +10,29 @@ class StatusBoard {
     }
 
     render = () => {
+        const prev = globalThis.localStorage.getItem('high-score');
         this.statusBoard.innerHTML = `
-            <div>
-                <span id='score'>Score: 0</span>
-                <span id='high-score'>Highscore: 0</span>
-                <span id='game-level'>Level: 0</span>
+            <div id='status-board'>
+                <div class='status'>
+                    <h1>Next</h1>
+                </div>
+                <div class='status'>
+                    <h1>Score</h1>
+                    <span id='score'>0</span>
+                </div>
+                <div class='status'>
+                    <h1>High Score</h1>
+                    <span id='high'>${prev ? prev : 0}</span>
+                </div>
+                <div class='status'>
+                    <h1>Lines</h1>
+                    <span id='lines'>0</span>
+                </div>
+                <div class='status play'>
+                    <div id='play-btn'>
+                        <h1 id='play'>Play</h1>
+                    </div>
+                </div>
             </div>
         `;
     };

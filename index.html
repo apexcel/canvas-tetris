@@ -2,10 +2,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Tetris with Javascript</title>
 </head>
 <body>
     <div id='app'></div>
+    <audio id='bgm' loop src="./soundtrack.mp3"></audio>
     <script src='./main.js' type="module"></script>
+    <script>
+        const url = "./styles.css";
+        document.head.innerHTML += `<link type="text/css" rel="stylesheet" href=${url}>`;
+    </script>
 </body>
 </html>
