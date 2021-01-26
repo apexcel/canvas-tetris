@@ -28,7 +28,7 @@ body {
 }
 
 #status-board {
-  height: 600;
+  height: 100%;
   display: flex;
   flex-direction: column;
   margin-left: 50px;
@@ -63,6 +63,66 @@ body {
   margin-top: auto;
   margin-bottom: 0;
   padding: 0;
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title h1{
+  display: inline;
+}
+
+#help {
+  cursor: help;
+  padding: 2px 5px;
+}
+
+#desc {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 200px;
+  font-size: 1.3rem;
+  transform: translate(-50%, -50%);
+  background-color: #282a57;
+  border: 1px solid #333333;
+  border-radius: 5px;
+}
+
+.desc-item {
+  display: flex;
+  height: 100%;
+  width: 200px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  position: relative;
+}
+
+.keys {
+  padding: 2px;
+}
+
+.left, .right {
+  top: 66px;
+}
+
+.up {
+  top: 12px;
+}
+
+.down {
+  top: -34px;
 }
 
 #play {

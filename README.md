@@ -1,4 +1,7 @@
-# Tetris made with Javascript
+# Tetris with Javascript
+
+This project made with ES6 Javascript, HTML, CSS.
+You can play [HERE]()
 
 ## Reference
 

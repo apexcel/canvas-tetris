@@ -26,8 +26,6 @@ const account = new Proxy(accountValue, {
 function drawNext(ctx) {
     const nextBlock = document.getElementById('next-block');
     const nextBlockCtx = nextBlock.getContext('2d');
-    console.log(nextBlock)
-    console.log(ctx)
     nextBlockCtx.clearRect(0, 0, nextBlockCtx.canvas.width, nextBlockCtx.canvas.height)
     ctx.shape.forEach((row, y) => {
         row.forEach((value, x) => {

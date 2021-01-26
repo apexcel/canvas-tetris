@@ -7,6 +7,21 @@ class StatusBoard {
         main.appendChild(this.statusBoard);
 
         this.render();
+        this.descriptionDisplay()
+    }
+
+    descriptionDisplay = () => {
+        const help = document.getElementById('help');
+
+        help.addEventListener('mouseover', () => {
+            const d = document.getElementById('desc');
+            d.style.display = 'flex'
+        })
+
+        help.addEventListener('mouseout', () => {
+            const d = document.getElementById('desc');
+            d.style.display = 'none'
+        })
     }
 
     render = () => {
@@ -14,7 +29,10 @@ class StatusBoard {
         this.statusBoard.innerHTML = `
             <div id='status-board'>
                 <div class='status'>
-                    <h1>Next</h1>
+                    <div class='title'>
+                        <h1>Next</h1>
+                        <span id='help'>?</span>
+                    </div>
                 </div>
                 <div class='status'>
                     <h1>Score</h1>

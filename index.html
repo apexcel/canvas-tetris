@@ -6,11 +6,24 @@
 </head>
 <body>
     <div id='app'></div>
-    <audio id='bgm' loop src="./soundtrack.mp3"></audio>
+    <audio id='bgm' loop src="./assets/soundtrack.mp3"></audio>
     <script src='./main.js' type="module"></script>
     <script>
         const url = "./styles.css";
         document.head.innerHTML += `<link type="text/css" rel="stylesheet" href=${url}>`;
     </script>
+    <div id='desc' style="display: none;">
+        <div class='desc-item'>
+            <img class='icon' src="./assets/p.png" alt="Pause">
+            <img class='icon' src="./assets/esc.png" alt="Escape">
+            <img class='icon' src="./assets/spacebar.png" alt="Spacebar">
+        </div>
+        <div class='desc-item'>
+            <img class='icon keys left' src="./assets/left.svg" width="50px" height="50px" alt="Up">
+            <img class='icon keys up' src="./assets/up.svg" width="50px" height="50px" alt="Up">
+            <img class='icon keys right' src="./assets/right.svg" width="50px" height="50px" alt="Up">
+            <img class='icon keys down' src="./assets/down.svg" width="50px" height="50px" alt="Up">
+        </div>
+    </div>
 </body>
 </html>

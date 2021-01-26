@@ -14,6 +14,7 @@ class GameBoard {
         [KEY.DOWN]: b => ({ ...b, y: b.y + 1 }),
         [KEY.SPACE]: b => ({ ...b, y: b.y + 1 }),
         [KEY.ESC]: () => this.gameOver(),
+        [KEY.P]: () => this.pause()
     };
 
     constructor(main, account, nextBlockProxy) {
@@ -54,7 +55,30 @@ class GameBoard {
         this.account.score = 0;
         this.account.lines = 0;
         this.account.high = prevHighScore ? prevHighScore : 0;
-        this.resetGrid();
+
+        this.grid = Array.from(Array(ROW), () => Array(COL).fill(0));
+        this.isPaused = false;
+    }
+
+    pause = () => {
+        const pauseKeys = e => {
+            e.preventDefault();
+            if (e.code === KEY.P) {
+                globalThis.addEventListener('keydown', this.onKeyDownHandler);
+                this.pause();
+            }
+        };
+        if (!this.isPaused) {
+            this.isPaused = true;
+            cancelAnimationFrame(this.requestId);
+            globalThis.removeEventListener('keydown', this.onKeyDownHandler);
+            globalThis.addEventListener('keydown', pauseKeys)
+        }
+        else {
+            this.isPaused = false;
+            globalThis.removeEventListener('keydown', pauseKeys);
+            requestAnimationFrame(this.animate);
+        }
     }
 
     animate = (now = 0) => {
@@ -108,10 +132,6 @@ class GameBoard {
         }
     }
 
-    resetGrid = () => {
-        this.grid = Array.from(Array(ROW), () => Array(COL).fill(0));
-    }
-
     drawGrid = () => {
         this.grid.forEach((row, y) => {
             row.forEach((value, x) => {
@@ -128,7 +148,7 @@ class GameBoard {
     };
 
     onKeyDownHandler = e => {
-        const k = e.keyCode;
+        const k = e.code;
         const getInput = this.transform[k];
 
         if (getInput) {
@@ -248,7 +268,6 @@ class GameBoard {
             if (this.time.gameLevel < LEVEL.length) {
                 this.time.level = LEVEL[this.time.gameLevel];
             }
-            console.log(this.time.gameLevel)
         }
     }
 }

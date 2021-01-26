@@ -1,7 +1,7 @@
 'use strict';
 
 const BLOCK_SIZE = 30;
-const ROW = 20;
+const ROW = 25;
 const COL = 11;
 
 const SHAPES = [
@@ -44,13 +44,13 @@ const SHAPES = [
 ];
 
 const KEY = {
-    ESC: 27,
-    SPACE: 32,
-    LEFT: 37,
-    UP: 38,
-    RIGHT: 39,
-    DOWN: 40,
-    P: 80
+    ESC: 'Escape',
+    SPACE: 'Space',
+    LEFT: 'ArrowLeft',
+    UP: 'ArrowUp',
+    RIGHT: 'ArrowRight',
+    DOWN: 'ArrowDown',
+    P: 'KeyP'
 };
 
 const COLORS = [
