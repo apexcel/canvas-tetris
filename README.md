@@ -1,5 +1,7 @@
 # Tetris with Javascript
 
+![Example](./example.gif)
+
 This project made with ES6 Javascript, HTML, CSS.
 You can play [HERE](https://apexcel.github.io/tetris/)
 
