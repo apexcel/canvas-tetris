@@ -1,6 +1,5 @@
 import { ROW, COL, BLOCK_SIZE, KEY, POINTS, COLORS, LEVEL, LINE_FOR_NEXT_LEVEL, getCenterPos } from './configs.js'
 import Block from './Block.js';
-import NextBlock from './NextBlock.js'
 
 const prevHighScore = globalThis.localStorage.getItem('high-score');
 const saveHighScore = value => globalThis.localStorage.setItem('high-score', value);

@@ -1,5 +1,3 @@
-
-
 class StatusBoard {
     constructor(main) {
         this.statusBoard = document.createElement('div');
