@@ -1,7 +1,7 @@
 # Tetris with Javascript
 
 This project made with ES6 Javascript, HTML, CSS.
-You can play [HERE]()
+You can play [HERE](https://apexcel.github.io/tetris/)
 
 ## Reference
 
