@@ -1,5 +1,6 @@
 import { ROW, COL, BLOCK_SIZE, KEY, POINTS, COLORS, LEVEL, LINE_FOR_NEXT_LEVEL, getCenterPos } from './configs.js'
 import Block from './Block.js';
+import NextBlock from './NextBlock.js'
 
 const prevHighScore = globalThis.localStorage.getItem('high-score');
 const saveHighScore = value => globalThis.localStorage.setItem('high-score', value);
@@ -15,10 +16,11 @@ class GameBoard {
         [KEY.ESC]: () => this.gameOver(),
     };
 
-    constructor(main, account) {
+    constructor(main, account, nextBlockProxy) {
         const canvas = document.createElement('canvas');
         this.ctx = canvas.getContext('2d');
         this.account = account;
+        this.nextBlockProxy = nextBlockProxy;
         this.init(canvas);
 
         main.appendChild(canvas);
@@ -33,6 +35,7 @@ class GameBoard {
             gameLevel: 0
         };
         this.block = new Block(this.ctx)
+        this.nextBlockProxy.ctx = new Block(this.ctx);
         this.animate();
         audio.play();
     };
@@ -65,7 +68,11 @@ class GameBoard {
             }
         }
         if (this.isFreeze) {
-            this.block = new Block(this.ctx)
+            this.block = this.nextBlockProxy.ctx;
+            this.nextBlockProxy.ctx = new Block(this.ctx);
+
+            // this.block = new Block(this.ctx)
+            // this.nextBlockProxy.ctx = this.block;
             this.isFreeze = false;
         }
 

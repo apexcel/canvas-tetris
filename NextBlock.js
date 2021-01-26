@@ -1,12 +1,14 @@
-import { ROW, COL, BLOCK_SIZE } from './configs.js'
+import { BLOCK_SIZE } from './configs.js'
 
+// TODO: 다음 나올 블록 보여주기
 class NextBlock {
     constructor() {
         const target = document.querySelector(`#status-board .status`);
-        const canvas = document.createElement('canvas');
-        this.ctx = canvas.getContext('2d');
-        this.init(canvas);
-        target.appendChild(canvas)
+        const nextCanvas = document.createElement('canvas');
+        this.ctx = nextCanvas.getContext('2d');
+        this.init(nextCanvas);
+
+        target.appendChild(nextCanvas)
     }
 
     init = canvas => {
