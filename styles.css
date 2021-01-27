@@ -23,6 +23,10 @@ body {
   box-shadow: 0px 0px 4px 2px #6d6d6d;
 }
 
+#app.hide {
+  visibility: hidden;
+}
+
 #game-board {
   background-color: #131313;
 }
@@ -179,5 +183,34 @@ body {
   }
   to {
     transform: translate(0);
+  }
+}
+
+.loading {
+  position: absolute;
+  display: inline-block;
+  width: 120px;
+  height: 120px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.loading:after {
+  content: " ";
+  display: block;
+  width: 120px;
+  height: 120px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #fff;
+  border-color: #fff transparent #fff transparent;
+  animation: loading 1.2s linear infinite;
+}
+@keyframes loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
